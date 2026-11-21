@@ -96,6 +96,7 @@ function ColumnFilterPopover({
   onClose,
 }: ColumnFilterPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
+  const [containsText, setContainsText] = useState(currentFilter?.textQuery ?? '');
   const [valueSearch, setValueSearch] = useState('');
   const [selectedSet, setSelectedSet] = useState<Set<string>>(
     () => new Set(currentFilter?.selectedValues ?? [])
@@ -130,6 +131,22 @@ function ColumnFilterPopover({
     return Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
   }, [allRows, column.key]);
 
+  const containsMatchCount = useMemo(() => {
+    const keywords = containsText
+      .split(/[,，、]/)
+      .map((k) => k.trim().toLowerCase())
+      .filter(Boolean);
+    if (keywords.length === 0) return null;
+    let hits = 0;
+    for (const row of allRows) {
+      const cellLower = (row[column.key] ?? '').toLowerCase();
+      if (keywords.some((kw) => cellLower.includes(kw))) {
+        hits += 1;
+      }
+    }
+    return hits;
+  }, [allRows, column.key, containsText]);
+
   const filteredOptions = useMemo(() => {
     const q = valueSearch.trim().toLowerCase();
     if (!q) return valueOptions.slice(0, 120);
@@ -150,13 +167,15 @@ function ColumnFilterPopover({
 
   const handleConfirm = () => {
     const selectedValues = Array.from(selectedSet);
+    const trimmedText = containsText.trim();
     const trimmedMin = minVal.trim();
     const trimmedMax = maxVal.trim();
 
-    if (selectedValues.length === 0 && !trimmedMin && !trimmedMax) {
+    if (selectedValues.length === 0 && !trimmedText && !trimmedMin && !trimmedMax) {
       onApply(null);
     } else {
       onApply({
+        textQuery: trimmedText || undefined,
         selectedValues: selectedValues.length > 0 ? selectedValues : undefined,
         min: trimmedMin || undefined,
         max: trimmedMax || undefined,
@@ -196,6 +215,49 @@ function ColumnFilterPopover({
         </button>
       </div>
 
+      {/* Contains (Partial Substring) Filter */}
+      <div className="mb-3 pb-3 border-b border-[var(--border-hairline)]">
+        <div className="flex items-center justify-between gap-2 mb-1.5">
+          <label
+            htmlFor={`contains-input-${column.key}`}
+            className="text-[11px] font-medium text-[var(--text-secondary)]"
+          >
+            包含關鍵字（部分比對）
+          </label>
+          {containsMatchCount !== null && (
+            <span className="text-[11px] font-mono tabular-nums text-[var(--accent-text)]">
+              符合 {containsMatchCount} 筆
+            </span>
+          )}
+        </div>
+        <div className="relative">
+          <input
+            id={`contains-input-${column.key}`}
+            type="text"
+            value={containsText}
+            onChange={(e) => setContainsText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleConfirm();
+              }
+            }}
+            placeholder="輸入包含文字（逗號可分隔多詞）"
+            className="w-full pl-2.5 pr-7 py-1.5 text-xs rounded-md border border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)]"
+          />
+          {containsText && (
+            <button
+              type="button"
+              onClick={() => setContainsText('')}
+              aria-label="清除包含關鍵字"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {column.inferredType === 'number' && (
         <div className="mb-3 pb-3 border-b border-[var(--border-hairline)]">
           <div className="text-[11px] font-medium text-[var(--text-secondary)] mb-1.5">
@@ -224,14 +286,17 @@ function ColumnFilterPopover({
         </div>
       )}
 
+      <div className="text-[11px] font-medium text-[var(--text-secondary)] mb-1.5">
+        或精確勾選項目
+      </div>
       <div className="relative mb-2">
         <Search className="w-3.5 h-3.5 text-[var(--text-muted)] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={valueSearch}
           onChange={(e) => setValueSearch(e.target.value)}
-          placeholder="搜尋此欄項目..."
-          aria-label="搜尋欄位項目"
+          placeholder="篩選下方清單選項..."
+          aria-label="篩選下方清單選項"
           className="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-md border border-[var(--border-hairline)] bg-[var(--bg-canvas)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
         />
       </div>
@@ -540,6 +605,9 @@ export function DataTableView({
               {activeFilterKeys.map((colKey) => {
                 const f = columnFilters[colKey];
                 const summaryParts: string[] = [];
+                if (f.textQuery && f.textQuery.trim().length > 0) {
+                  summaryParts.push(`包含「${f.textQuery.trim()}」`);
+                }
                 if (f.selectedValues && f.selectedValues.length > 0) {
                   summaryParts.push(
                     f.selectedValues.length <= 2

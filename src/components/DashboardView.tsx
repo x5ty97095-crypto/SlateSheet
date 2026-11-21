@@ -124,6 +124,7 @@ export function DashboardView({
     globalSearch.trim().length > 0 ||
     Object.values(columnFilters).some(
       (f) =>
+        (f.textQuery && f.textQuery.trim().length > 0) ||
         (f.selectedValues && f.selectedValues.length > 0) ||
         (f.min && f.min.trim().length > 0) ||
         (f.max && f.max.trim().length > 0)

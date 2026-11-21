@@ -206,7 +206,12 @@ export default function App() {
 
       const next = { ...prev };
       const updatedValues = Array.from(currentSelected);
-      if (updatedValues.length === 0 && !existing?.min && !existing?.max) {
+      if (
+        updatedValues.length === 0 &&
+        !existing?.textQuery?.trim() &&
+        !existing?.min &&
+        !existing?.max
+      ) {
         delete next[columnKey];
       } else {
         next[columnKey] = {
@@ -246,6 +251,20 @@ export default function App() {
       for (const [colKey, filter] of activeFilterEntries) {
         const raw = (row[colKey] ?? '').trim();
         const normalizedLabel = raw === '' ? '(空白)' : raw;
+
+        if (filter.textQuery && filter.textQuery.trim().length > 0) {
+          const keywords = filter.textQuery
+            .split(/[,，、]/)
+            .map((k) => k.trim().toLowerCase())
+            .filter(Boolean);
+          if (keywords.length > 0) {
+            const cellLower = (row[colKey] ?? '').toLowerCase();
+            const matchesContains = keywords.some((kw) => cellLower.includes(kw));
+            if (!matchesContains) {
+              return false;
+            }
+          }
+        }
 
         if (filter.selectedValues && filter.selectedValues.length > 0) {
           if (!filter.selectedValues.includes(normalizedLabel)) {

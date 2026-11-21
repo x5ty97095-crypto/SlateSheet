@@ -1,0 +1,242 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Morandi Cool Slate & Mist Blue — Light Mode */
+  --bg-canvas: #f4f6f8;
+  --bg-surface: #ffffff;
+  --bg-subtle: #eaeef2;
+  --bg-hover: #e2e8ee;
+  --border-hairline: #d8e0e8;
+  --border-strong: #c2cdd8;
+  --text-primary: #25303b;
+  --text-secondary: #5e6d7e;
+  --text-muted: #7b8a9a;
+  --accent-primary: #5b7a94;
+  --accent-primary-hover: #4c6880;
+  --accent-soft: #e6eef4;
+  --accent-text: #3d5a73;
+
+  /* Semantic Low-Saturation Status */
+  --status-success: #4f7a65;
+  --status-warning: #9e7b47;
+  --status-danger: #a65959;
+
+  /* Lightweight Frosted Glass Tokens (Light) */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-hover: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(91, 122, 148, 0.24);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --glass-primary-bg: rgba(91, 122, 148, 0.86);
+  --glass-primary-hover: rgba(76, 104, 128, 0.94);
+  --glass-primary-border: rgba(255, 255, 255, 0.28);
+
+  /* Reading Font Scale — Default md */
+  --doc-font-size: 15px;
+  --doc-line-height: 1.72;
+  --table-font-size: 14px;
+  --table-line-height: 1.62;
+  --code-font-size: 13px;
+
+  /* Typography */
+  --font-display: "Plus Jakarta Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.dark {
+  /* Morandi Deep Slate & Soft Mist Blue — Dark Mode */
+  --bg-canvas: #161b22;
+  --bg-surface: #1f2630;
+  --bg-subtle: #27303c;
+  --bg-hover: #2f3a48;
+  --border-hairline: #323d4b;
+  --border-strong: #435163;
+  --text-primary: #e6ecf2;
+  --text-secondary: #99a7b6;
+  --text-muted: #7a8999;
+  --accent-primary: #7ea1bd;
+  --accent-primary-hover: #91b2cc;
+  --accent-soft: #263442;
+  --accent-text: #a5c3da;
+
+  /* Semantic Low-Saturation Status (Dark) */
+  --status-success: #79a68f;
+  --status-warning: #c4a36e;
+  --status-danger: #c98080;
+
+  /* Lightweight Frosted Glass Tokens (Dark) */
+  --glass-bg: rgba(39, 48, 60, 0.68);
+  --glass-bg-hover: rgba(49, 60, 74, 0.85);
+  --glass-border: rgba(165, 195, 218, 0.2);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --glass-primary-bg: rgba(126, 161, 189, 0.84);
+  --glass-primary-hover: rgba(145, 178, 204, 0.94);
+  --glass-primary-border: rgba(255, 255, 255, 0.22);
+}
+
+/* 4-Step Reading Font Scale */
+:root[data-font-scale="sm"] {
+  --doc-font-size: 13px;
+  --doc-line-height: 1.65;
+  --table-font-size: 12.5px;
+  --table-line-height: 1.55;
+  --code-font-size: 12px;
+}
+
+:root[data-font-scale="md"] {
+  --doc-font-size: 15px;
+  --doc-line-height: 1.72;
+  --table-font-size: 14px;
+  --table-line-height: 1.62;
+  --code-font-size: 13px;
+}
+
+:root[data-font-scale="lg"] {
+  --doc-font-size: 17px;
+  --doc-line-height: 1.76;
+  --table-font-size: 16px;
+  --table-line-height: 1.66;
+  --code-font-size: 14.5px;
+}
+
+:root[data-font-scale="xl"] {
+  --doc-font-size: 19px;
+  --doc-line-height: 1.8;
+  --table-font-size: 18px;
+  --table-line-height: 1.7;
+  --code-font-size: 16px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background-color: var(--bg-canvas);
+    scroll-behavior: smooth;
+  }
+
+  .dark body {
+    letter-spacing: 0.01em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Lightweight Performance-First Frosted Glass Buttons */
+.btn-glass {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
+  color: var(--text-primary);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-glass:hover:not(:disabled) {
+  background-color: var(--glass-bg-hover);
+  border-color: var(--accent-primary);
+}
+
+.btn-glass:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-glass-primary {
+  background-color: var(--glass-primary-bg);
+  border: 1px solid var(--glass-primary-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .btn-glass-primary {
+  color: #121820;
+  font-weight: 600;
+}
+
+.btn-glass-primary:hover:not(:disabled) {
+  background-color: var(--glass-primary-hover);
+}
+
+.btn-glass-primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+@supports not ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+  .btn-glass {
+    background-color: var(--bg-surface);
+  }
+  .btn-glass-primary {
+    background-color: var(--accent-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .btn-glass,
+  .btn-glass-primary {
+    transition: none;
+  }
+}
+
+/* Reading & Table Typography Helpers */
+.doc-prose {
+  font-size: var(--doc-font-size);
+  line-height: var(--doc-line-height);
+}
+
+.table-cell-text {
+  font-size: var(--table-font-size);
+  line-height: var(--table-line-height);
+}
+
+.code-block-text {
+  font-size: var(--code-font-size);
+  line-height: 1.65;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

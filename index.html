@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant" data-font-scale="md">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SlateSheet 靜析表坊 — 應用程式規格書與資料檢視原型</title>
+    <meta
+      name="description"
+      content="莫蘭迪冷灰霧藍風格之應用程式規格書中心與純篩選排序試算表原型，支援 XLSX/CSV/TXT 匯入、自動換行完整顯示、字級調節與互動式類別分佈儀表板。"
+    />
+    <meta property="og:title" content="SlateSheet 靜析表坊 — 應用程式規格書與資料檢視原型" />
+    <meta
+      property="og:description"
+      content="莫蘭迪冷灰霧藍風格之應用程式規格書中心與純篩選排序試算表原型，支援 XLSX/CSV/TXT 匯入、自動換行完整顯示、字級調節與互動式類別分佈儀表板。"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var savedTheme = localStorage.getItem('slatesheet-theme');
+          if (
+            savedTheme === 'dark' ||
+            (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
+            document.documentElement.classList.add('dark');
+          }
+          var savedScale = localStorage.getItem('slatesheet-font-scale');
+          if (savedScale && ['sm', 'md', 'lg', 'xl'].indexOf(savedScale) !== -1) {
+            document.documentElement.setAttribute('data-font-scale', savedScale);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

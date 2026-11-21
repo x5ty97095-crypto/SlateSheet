@@ -1,0 +1,8 @@
+{
+  "name": "SlateSheet 靜析表坊",
+  "description": "莫蘭迪冷灰霧藍風格之應用程式規格書中心與純篩選排序試算表原型，支援 XLSX/CSV/TXT 匯入、自動換行完整顯示、字級調節與互動式類別分佈儀表板。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
